@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名字Gay指数计算器</title>
+    <style>
+500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .rainbow-text {
+            background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #84cc16, #22c55e, #14b8a6, #06b6d4, #3b82f6, #8b5cf6, #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .progress-bar-inner {
+            transition: width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), background-color 0.8s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+            20%, 40%, 60%, 80% { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.5s ease-in-out; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+
+        @keyframes rainbow-glow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .rainbow-100 {
+            background: linear-gradient(270deg, #d946ef, #8b5cf6, #3b82f6, #06b6d4, #14b8a6, #22c55e, #84cc16, #eab308, #f97316, #ef4444);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-glow 2s linear infinite;
+        }
+
+        @keyframes initial-fade-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .container-fade-in { animation: initial-fade-in 0.7s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+
+        /* 结果百分比的弹出动画 */
+        @keyframes pop-in {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        .pop-in { animation: pop-in 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards; }
+        
+        /* 进度条的辉光动画 */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.3), 0 0 12px rgba(168, 85, 247, 0.2); }
+            50% { box-shadow: 0 0 16px rgba(168, 85, 247, 0.7), 0 0 24px rgba(168, 85, 247, 0.5); }
+        }
+        .pulsing-glow { animation: pulse-glow 1.5s infinite ease-in-out; }
+
+    
+*{box-sizing:border-box}body{margin:0;background:#111827;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:90px 20px;font-family:system-ui,sans-serif!important}button,input{font:inherit}button{border:0;cursor:pointer;color:white;background:#9333ea;padding:12px 18px;border-radius:12px;font-weight:700;transition:.2s}button:hover{filter:brightness(1.15)}button:disabled{opacity:.6;cursor:wait}button:focus-visible,input:focus-visible{outline:3px solid #c084fc;outline-offset:3px}input{width:100%;padding:14px;background:#374151;border:1px solid #4b5563;border-radius:10px;color:white}h1{font-size:28px;margin:0}h2{font-size:19px}p{line-height:1.6}a{color:#9ca3af}body>div:first-child{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:20px;z-index:10;pointer-events:none}body>div:first-child>div{position:relative;pointer-events:auto}body>div:nth-child(2){width:100%;max-width:460px;padding:32px;background:#1f2937;border:1px solid #374151;border-radius:24px;box-shadow:0 24px 80px #0005}body>div:nth-child(2)>div:first-child{text-align:center;margin-bottom:26px}body>div:nth-child(2)>div:first-child p{color:#9ca3af;margin:8px 0}#calculateBtn{width:100%;margin-top:16px}#resultSection{text-align:center;padding-top:20px;overflow-wrap:anywhere}#resultSection>div{position:relative;width:100%;height:32px;background:#374151;border:2px solid #4b5563;border-radius:20px;overflow:hidden}#progressBar{height:100%;border-radius:20px}#percentageText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:700;text-shadow:0 1px 4px #000}#resultMessage{min-height:64px;height:auto}#resultName{color:#c084fc}#historyPanel{position:absolute;left:0;top:50px;width:min(320px,85vw);max-height:65vh;overflow:auto;padding:18px;background:#1f2937;border:1px solid #4b5563;border-radius:16px;box-shadow:0 15px 40px #0008}#historyList{list-style:none;padding:0}#historyList li{padding:10px;margin:8px 0;background:#374151;border-radius:8px;display:flex;justify-content:space-between;gap:10px;overflow-wrap:anywhere}#historyList li>div{min-width:0}#historyList p{font-size:12px;color:#cbd5e1;margin:4px 0}#historyList button{padding:6px;font-size:12px;flex-shrink:0;align-self:center}#clearHistoryBtn{background:#b91c1c;width:100%}body>div:last-of-type{position:fixed;bottom:14px;right:18px;font-size:11px}#notice{font-size:12px;color:#9ca3af}.hidden{display:none!important}.text-xs{font-size:12px}.text-gray-500{color:#9ca3af}.animate-spin{display:inline-block;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+    
+#perfectBanner{position:fixed;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(600px,calc(100% - 24px));max-height:calc(100vh - 36px);max-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - 24px);overflow-y:auto;overscroll-behavior:contain;z-index:50;background:#291943;border:1px solid #c084fc;border-radius:18px;padding:22px;box-shadow:0 16px 60px #0009;text-align:center;animation:bannerEnter .35s ease-out}#perfectBanner h2{font-size:clamp(16px,4.5vw,19px);line-height:1.65;margin:0 0 18px;overflow-wrap:anywhere}#perfectBanner .headline-line{display:block}#perfectBanner .choices{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}#perfectBanner button{background:#9333ea;color:#fff;opacity:1;cursor:pointer;min-width:0;min-height:46px;white-space:normal;overflow-wrap:anywhere}#perfectBanner button:disabled{background:#9333ea;color:#fff;opacity:1;cursor:pointer}#perfectBanner .confetti{display:inline-block;animation:pop-in .5s ease-out;font-size:26px}@keyframes bannerEnter{from{opacity:0;transform:translate(-50%,-16px)}to{opacity:1;transform:translate(-50%,0)}}@media(max-width:480px){#perfectBanner{padding:18px 16px}#perfectBanner .choices{flex-direction:column;gap:10px}#perfectBanner .choices button{width:100%}}
+
+</style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+    <!-- 新增的顶部导航容器 -->
+    <div class="fixed top-0 left-0 right-0 p-4 flex justify-between items-center z-10">
+        <!-- 历史记录折叠栏容器 -->
+        <div class="relative">
+            <button id="historyToggleBtn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                历史记录
+            </button>
+            <div id="historyPanel" class="hidden mt-2 w-64 bg-gray-800 rounded-lg shadow-xl p-4 space-y-2 max-h-64 overflow-y-auto absolute left-0">
+                <h3 class="text-lg font-semibold text-gray-300 mb-3">历史记录</h3>
+                <ul id="historyList" class="space-y-2 text-sm text-gray-400">
+                    <!-- History items will be inserted here by JS -->
+                </ul>
+                <button id="clearHistoryBtn" class="w-full mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg text-sm">
+                    清除历史记录
+                </button>
+                <p class="text-xs text-gray-500 mt-4">历史仅保存在本浏览器。分享链接包含名字，请自行选择是否分享。</p>
+            </div>
+        </div>
+
+        <!-- 分享按钮容器 -->
+        <div class="relative">
+            <button id="shareButton" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg hidden">
+                分享
+            </button>
+        </div>
+    </div>
+
+    <!-- container-fade-in class 实现进入动画 -->
+    <div class="w-full max-w-md mx-auto bg-gray-800 rounded-2xl shadow-2xl p-6 md:p-8 space-y-6 container-fade-in">
+        <!-- Header -->
+        <div class="text-center">
+            <h1 class="text-3xl font-bold rainbow-text">名字Gay指数计算器</h1>
+            <p class="text-gray-400 mt-2">输入一个名字，看看“科学”的计算结果！</p>
+            <p id="notice" role="status" class="text-xs text-gray-500 mt-1">纯属娱乐，不反映任何人的真实性取向。</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="space-y-4">
+            <input type="text" aria-label="名字或网名" id="nameInput" placeholder="输入任何名字或网名" class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300">
+            <!-- active:scale-95 实现按钮按压效果 -->
+            <button id="calculateBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 transform hover:scale-105 active:scale-95 shadow-lg">
+                <span id="btnText">开始计算</span>
+                <span id="btnSpinner" class="hidden animate-spin">◐</span>
+            </button>
+        </div>
+
+        <!-- Result Section -->
+        <div aria-live="polite" id="resultSection" class="hidden pt-6 space-y-4 text-center">
+            <h2 class="text-xl font-semibold text-gray-300 fade-in-up">计算结果 for "<span id="resultName" class="font-bold text-purple-400"></span>"</h2>
+            
+            <div class="relative w-full h-8 bg-gray-700 rounded-full overflow-hidden border-2 border-gray-600">
+                <div id="progressBar" class="progress-bar-inner h-full rounded-full" style="width: 0%;"></div>
+                <span id="percentageText" class="absolute inset-0 flex items-center justify-center text-sm font-bold text-white opacity-0">0%</span>
+            </div>
+
+            <p id="resultMessage" class="text-lg font-medium text-gray-200 h-12 flex items-center justify-center"></p>
+        </div>
+    </div>
+
+    <div class="fixed bottom-4 right-4 text-xs text-gray-600">
+        <a href="https://github.com/Akanyi/Gaynum" target="_blank" rel="noopener noreferrer" class="hover:text-gray-500 transition-colors duration-300">
+            基于 Akanyi/Gaynum · 朋友聚会改编版
+        </a>
+    </div>
+
+    <section id="perfectBanner" class="hidden" role="dialog" aria-modal="false" aria-labelledby="perfectTitle">
+        <h2 id="perfectTitle"><span class="headline-line">恭喜<span class="confetti" aria-label="小彩花">🎉</span>！</span><span class="headline-line">已鉴定为100%纯正的GAY！</span><span class="headline-line">达到人生最高境界！！！</span></h2>
+        <div class="choices"><button id="acceptPerfect" type="button">感谢开发者的认可</button><button type="button" disabled>wtf？***</button></div>
+    </section>
+    <script src="vendor/pinyin.js"></script>
+    <script>
+        window.onload = function() {
+            const nameInput = document.getElementById('nameInput');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
+            const resultSection = document.getElementById('resultSection');
+            const resultName = document.getElementById('resultName');
+            const progressBar = document.getElementById('progressBar');
+            const percentageText = document.getElementById('percentageText');
+            const resultMessage = document.getElementById('resultMessage');
+            const shareButton = document.getElementById('shareButton'); 
+            const historyToggleBtn = document.getElementById('historyToggleBtn'); 
+            const historyPanel = document.getElementById('historyPanel'); 
+            const historyList = document.getElementById('historyList'); 
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn'); 
+
+            let resultInterval;
+            let typingInterval; // 用于控制打字机效果的计时器
+
+            // Base64 编码和解码函数
+            // 简单的哈希函数，用于根据输入生成确定性结果消息
+            function simpleHash(str) {
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    const char = str.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash |= 0; // Convert to 32bit integer
+                }
+                return Math.abs(hash);
+            }
+
+            // Base64 编码和解码函数
+            function encodeBase64(str) {
+                return btoa(encodeURIComponent(str));
+            }
+
+            function decodeBase64(str) {
+                try {
+                    return decodeURIComponent(atob(str));
+                } catch (e) {
+                    console.error("Base64 decoding failed:", e);
+                    return null;
+                }
+            }
+
+            function readHistory() {
+                try {
+                    const records = JSON.parse(localStorage.getItem('gaynumPartyHistoryV1') || '[]');
+                    return Array.isArray(records) ? records.filter(x => x && typeof x.name === 'string' && x.percentage === partyScore(x.name) && typeof x.message === 'string').slice(0,10) : [];
+                } catch { return []; }
+            }
+            // 保存历史记录
+            function saveHistory(name, percentage, message) {
+                let history = readHistory();
+                history.unshift({ name, percentage, message, timestamp: new Date().toLocaleString() }); // 添加到数组开头
+                if (history.length > 10) { // 只保留最新的10条记录
+                    history = history.slice(0, 10);
+                }
+                try { localStorage.setItem('gaynumPartyHistoryV1', JSON.stringify(history)); } catch { /* 隐私模式下仍可计算 */ }
+                renderHistory(); // 更新历史记录显示
+            }
+
+            // 渲染历史记录
+            function renderHistory() {
+                const history = readHistory();
+                historyList.innerHTML = ''; // 清空现有列表
+                if (history.length === 0) {
+                    historyList.innerHTML = '<li class="text-gray-500">暂无历史记录</li>';
+                    return;
+                }
+                history.forEach((item, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'p-2 bg-gray-700 rounded-md flex justify-between items-center cursor-pointer hover:bg-gray-600 transition duration-200';
+
+                    // 使用 DOM API 而非 innerHTML，防止存储型 XSS
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'flex-grow min-w-0';
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'font-semibold text-purple-300';
+                    nameSpan.textContent = item.name; // textContent 自动转义
+
+                    const separator = document.createTextNode(': ');
+
+                    const percentSpan = document.createElement('span');
+                    percentSpan.className = 'font-bold text-white';
+                    percentSpan.textContent = item.percentage.toFixed(2) + '%';
+
+                    const messageP = document.createElement('p');
+                    messageP.className = 'text-xs text-gray-400 mt-1 truncate';
+                    messageP.textContent = item.message; // textContent 自动转义
+
+                    contentDiv.appendChild(nameSpan);
+                    contentDiv.appendChild(separator);
+                    contentDiv.appendChild(percentSpan);
+                    contentDiv.appendChild(messageP);
+
+                    const recallBtn = document.createElement('button');
+                    recallBtn.className = 'recall-history text-purple-400 hover:text-purple-300 text-sm flex-shrink-0 whitespace-nowrap ml-2 px-3 py-1 rounded-md border border-purple-400 hover:bg-purple-700 transition duration-200';
+                    recallBtn.dataset.index = index;
+                    recallBtn.textContent = '查看';
+
+                    listItem.appendChild(contentDiv);
+                    listItem.appendChild(recallBtn);
+                    historyList.appendChild(listItem);
+                });
+            }
+
+            // 从历史记录中加载并显示结果
+            function recallHistoryItem(index) {
+                const history = readHistory();
+                if (history[index]) {
+                    const item = history[index];
+                    nameInput.value = item.name; // 填充输入框
+                    displayResult(item.name, item.percentage, item.message); // 直接显示结果
+                    historyPanel.classList.add('hidden'); // 折叠历史记录面板
+                }
+            }
+
+            // 聚会娱乐规则：每个名字稳定得到 98～100 分，不推断真实性取向。
+            // 特殊规则优先：黄豆相关、djy → 0；lfjm → 100。
+            function specialScore(name) {
+                const normalized = name.normalize('NFKC').trim().toLowerCase();
+                const soyTerms = ['黄豆','黃豆','大豆','毛豆','豆浆','豆漿','豆乳','豆奶','豆腐','豆花','豆皮','腐竹','纳豆','納豆','味噌','soybean','soy bean','soya','soy milk','soymilk','tofu','edamame','natto'];
+                if (soyTerms.some(term => normalized.includes(term))) return 0;
+                // 汉字名要求全为汉字（可包含空格、间隔号），不把英文缩写当作拼音名。
+                const chinese = normalized.replace(/[\s·・]/gu, '');
+                if (/^\p{Script=Han}+$/u.test(chinese)) {
+                    const initials = pinyin.pinyin(chinese, {style: 'first_letter', heteronym: false}).flat().join('');
+                    if (initials === 'djy') return 0;
+                    if (initials === 'lfjm') return 100;
+                }
+                return null;
+            }
+            function partyScore(name) {
+                const special = specialScore(name);
+                if (special !== null) return special;
+                let hash = 2166136261;
+                for (const char of name.normalize('NFKC').trim().toLowerCase()) {
+                    hash = Math.imul(hash ^ char.codePointAt(0), 16777619) >>> 0;
+                }
+                return 98 + (hash % 201) / 100;
+            }
+            function getResultMessage(percentage, name) {
+                const tiers = percentage === 0 ? ['你一报名字，计算器直接宣布本场彩虹放假！', '零分特别嘉宾，连彩虹都得给你单开一桌！', '别人忙着冲榜，你直接把评分系统整沉默了！'] : percentage === 100 ? ['你不是通讯录里的联系人，你是通讯录的创始人！', '满分不是你的上限，是这个破计算器的极限！', '你一报名字，整座城市的彩虹都得连夜加班！', '别人自带出场音乐，你自带整场骄傲巡游！'] : percentage >= 99.5 ? ['你不是彩虹下面的人，你是彩虹背后的承重墙！', '你一上线，方圆十里的雷达直接集体过载！', '建议别再测了，服务器已经开始喊你董事长！', '你这个名字一出现，进度条直接申请工伤！'] : percentage >= 99 ? ['你都不用自我介绍，彩虹已经替你开完发布会！', '你不是来参加派对的，你是来收购彩虹的！', '你一进群，群名都得连夜改成彩虹总部！', '这哪是名字，这是彩虹集团的上市申请书！'] : ['你刚输入名字，计算器就连夜把直线掰成了圆！', '你这名字刚过安检，彩虹警报就响彻全场！', '别人测个指数，你直接把检测仪测出彩虹！', '你还没开始整活，通讯录已经给你留好主位！'];
+                return tiers[Math.floor(Math.random() * tiers.length)];
+            }
+
+            function getProgressBarColor(percentage) {
+                const colors = [ { p: 0, color: '#3b82f6' }, { p: 25, color: '#22c55e' }, { p: 50, color: '#eab308' }, { p: 75, color: '#f97316' }, { p: 100, color: '#d946ef' } ];
+                for (let i = 1; i < colors.length; i++) {
+                    if (percentage <= colors[i].p) {
+                        const p1 = colors[i-1].p, p2 = colors[i].p, c1 = colors[i-1].color, c2 = colors[i].color;
+                        const factor = (p2 - p1 === 0) ? 1 : (percentage - p1) / (p2 - p1);
+                        const r1 = parseInt(c1.substring(1,3),16), g1 = parseInt(c1.substring(3,5),16), b1 = parseInt(c1.substring(5,7),16);
+                        const r2 = parseInt(c2.substring(1,3),16), g2 = parseInt(c2.substring(3,5),16), b2 = parseInt(c2.substring(5,7),16);
+                        const r = Math.round(r1 + factor * (r2-r1)), g = Math.round(g1 + factor * (g2-g1)), b = Math.round(b1 + factor * (b2-b1));
+                        return `rgb(${r},${g},${b})`;
+                    }
+                }
+                return colors[colors.length - 1].color;
+            }
+
+            function typeResultMessage(message) {
+                clearInterval(typingInterval);
+                resultMessage.textContent = '';
+                let i = 0;
+                typingInterval = setInterval(() => {
+                    if (i < message.length) {
+                        resultMessage.textContent += message.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typingInterval);
+                    }
+                }, 50); // 每个字 50 毫秒
+            }
+
+            function displayResult(name, percentage, message = null) { 
+                clearInterval(resultInterval);
+                clearInterval(typingInterval);
+                progressBar.style.width = "0%";
+                document.getElementById('perfectBanner').classList.add('hidden');
+                resultName.textContent = name;
+                resultSection.classList.remove('hidden');
+                shareButton.classList.remove('hidden'); // 显示分享按钮
+                
+                // 重置样式
+                percentageText.style.opacity = 0;
+                resultMessage.textContent = '';
+                percentageText.classList.remove('pop-in', 'rainbow-100');
+                progressBar.classList.remove('pulsing-glow');
+                
+                setTimeout(() => progressBar.classList.add('pulsing-glow'), 100);
+
+                let currentPercent = -1;
+                resultInterval = setInterval(() => {
+                    currentPercent++;
+                    if (currentPercent >= percentage) {
+                        clearInterval(resultInterval);
+                        currentPercent = percentage;
+                        
+                        percentageText.textContent = `${currentPercent.toFixed(2)}%`;
+                        percentageText.style.opacity = 1;
+                        percentageText.classList.add('pop-in'); // 应用弹出动画
+                        
+                        // 如果 message 为 null，则实时生成
+                        const finalMessage = message || getResultMessage(percentage, name); // 传入 name
+                        typeResultMessage(finalMessage); // 调用打字机效果
+
+                        if (currentPercent === 100) {
+                            percentageText.classList.add('rainbow-100');
+                            document.getElementById('perfectBanner').classList.remove('hidden');
+                            document.getElementById('acceptPerfect').focus();
+                        }
+                        
+                        setTimeout(() => progressBar.classList.remove('pulsing-glow'), 500);
+            // 保存历史记录
+                        saveHistory(name, percentage, finalMessage);
+                    }
+                    progressBar.style.width = `${currentPercent.toFixed(2)}%`;
+                    progressBar.style.backgroundColor = getProgressBarColor(currentPercent);
+                    if(currentPercent !== -1) {
+                       percentageText.textContent = `${currentPercent.toFixed(2)}%`;
+                       percentageText.style.opacity = 1;
+                    }
+                }, 20);
+            }
+
+            async function handleShare() {
+                const name = resultName.textContent;
+                // const percentage = parseInt(percentageText.textContent); // 不再需要
+                // const message = resultMessage.textContent; // 不再需要
+
+                if (!name) { // 只检查名字
+                    alert('请先计算一个结果再分享！');
+                    return;
+                }
+
+                const dataToEncode = `name=${encodeURIComponent(name)}`; // 只编码名字
+                const encodedData = encodeBase64(dataToEncode);
+                if (window.location.protocol === 'file:') { alert('当前是本地文件。部署到网站后即可生成朋友能打开的分享链接。'); return; }
+                const shareUrl = new URL(window.location.href);
+                shareUrl.search = '';
+                shareUrl.hash = '';
+                shareUrl.searchParams.set('data', encodedData);
+
+                try {
+                    await navigator.clipboard.writeText(shareUrl.toString());
+                    alert('分享链接已复制到剪贴板：' + shareUrl);
+                } catch (error) {
+                    window.prompt('请复制分享链接：', shareUrl.toString());
+                    console.error('Copy to clipboard failed:', error);
+                }
+            }
+
+            function handleCalculation() {
+                if (calculateBtn.disabled) return;
+                clearInterval(resultInterval);
+                const originalName = nameInput.value;
+                const trimmedName = originalName.trim(); // 去除名字前后的空格
+                if (!trimmedName) { // 使用去除空格后的名字进行检查
+                    nameInput.focus();
+                    document.getElementById('notice').textContent = '先输入一个名字或网名吧。';
+                    nameInput.classList.add('shake');
+                    setTimeout(() => nameInput.classList.remove('shake'), 500);
+                    return;
+                }
+                document.getElementById('notice').textContent = '纯属娱乐，不反映任何人的真实性取向。';
+                btnText.classList.add('hidden');
+                btnSpinner.classList.remove('hidden');
+                calculateBtn.disabled = true;
+                resultSection.classList.add('hidden');
+                shareButton.classList.add('hidden'); // 隐藏分享按钮
+                
+                clearInterval(typingInterval); // 如果上次的打字机还在运行，则清除
+
+                setTimeout(() => {
+                    const finalPercentage = partyScore(trimmedName);
+                    // displayResult 现在会根据 name 和 percentage 实时生成 message
+                    displayResult(trimmedName, finalPercentage); // 传递去除空格后的名字
+                    btnText.classList.remove('hidden');
+                    btnSpinner.classList.add('hidden');
+                    calculateBtn.disabled = false;
+                }, 800);
+            }
+
+            // 检查URL参数并显示结果
+            function checkUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const encodedData = urlParams.get('data');
+                if (encodedData) {
+                    const decodedData = decodeBase64(encodedData);
+                    if (decodedData) {
+                        const params = new URLSearchParams(decodedData);
+                        const name = params.get('name');
+                        // const percentage = parseInt(params.get('percentage')); // 不再需要
+                        // const message = params.get('message'); // 不再需要
+
+                        if (name) { // 只检查名字
+                            nameInput.value = name; // 填充输入框
+                            handleCalculation(); // 触发计算流程
+                        }
+                    }
+                }
+            }
+
+            document.getElementById('acceptPerfect').addEventListener('click', () => {
+                document.getElementById('perfectBanner').classList.add('hidden');
+                calculateBtn.focus();
+            });
+            calculateBtn.addEventListener('click', handleCalculation);
+            nameInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    handleCalculation();
+                }
+            });
+
+            shareButton.addEventListener('click', handleShare); // 分享按钮事件监听
+
+            historyToggleBtn.addEventListener('click', () => { // 历史记录折叠按钮事件监听
+                historyPanel.classList.toggle('hidden');
+            });
+
+            historyList.addEventListener('click', (event) => { // 历史记录列表点击事件委托
+                if (event.target.classList.contains('recall-history')) {
+                    const index = event.target.dataset.index;
+                    recallHistoryItem(index);
+                }
+            });
+
+            clearHistoryBtn.addEventListener('click', () => { // 清除历史记录按钮事件监听
+                if (confirm('确定要清除所有历史记录吗？')) {
+                    try { localStorage.removeItem('gaynumPartyHistoryV1'); } catch {}
+                    renderHistory(); // 更新历史记录显示
+                }
+            });
+
+            // 页面加载时执行
+            renderHistory(); // 渲染历史记录
+            checkUrlParams(); // 检查URL参数
+        };
+    </script>
+</body>
+</html>
